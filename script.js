@@ -1,4 +1,5 @@
 const bannerSlides = document.querySelectorAll('.main__banner__carousel__img')
+const moviesContainer = document.querySelector('.main__movies');
 const nextSlideBtn = document.querySelector('#main__banner__carousel__next')
 const prevSlideBtn = document.querySelector('#main__banner__carousel__prev')
 const lastSlideIndex = bannerSlides.length - 1
@@ -33,7 +34,29 @@ const autoChangeSlide = () => {
   setInterval(nextSlide, 3000)
 }
 
-autoChangeSlide();
+const getMovies = async () => {
+  const moviesInJson = await fetch("./movies.json");
+  const { movies } = await moviesInJson.json();
+
+  console.log(movies);
+
+  renderMoviesIntoDOM(movies);
+}
+
+const renderMoviesIntoDOM = moviesArray => {
+  const movies = moviesArray.map(({name, img, year}) => {
+    return `
+      <div class="main__movies__movie">
+        <img class="main__movies__movie__img" src="${img}" alt="${name} movie">
+      </div>
+    `
+  }).join('');
+
+  moviesContainer.innerHTML += movies;
+}
+
+autoChangeSlide()
+getMovies()
 
 nextSlideBtn.addEventListener('click', nextSlide)
 prevSlideBtn.addEventListener('click', prevSlide)

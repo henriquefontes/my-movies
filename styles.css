@@ -16,20 +16,23 @@ html {
 
 :root {
   --text-color: #ccc;
+  --primary-color: #3B185F;
+  --light-primary-color: #4d207a;
+  --background-color: #111;
 }
 
 .wrapper {
   width: 100vw;
   min-height: 100vh;
   height: 100%;
-  background-color: #222;
+  background-color: var(--background-color);
 }
 
 .wrapper-header {
   z-index: 10;
   width: 100%;
   height: 70px;
-  background-color: #223;
+  background-color: var(--primary-color);
   display: flex;
   justify-content: center;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
@@ -73,7 +76,7 @@ html {
 }
 
 .header__nav__menu__item:hover {
-  background-color: #3B185F;
+  background-color: var(--light-primary-color);
   cursor: pointer;
 }
 
@@ -128,8 +131,8 @@ html {
 #main__banner__carousel__prev, #main__banner__carousel__next {
   position: absolute;
   top: 45%;
-  background-color: #3B185F;
-  border: 4px solid #222;
+  background-color: var(--primary-color);
+  border: 4px solid var(--background-color);
   border-radius: 50%;
   width: 45px;
   height: 45px;
@@ -141,7 +144,7 @@ html {
 }
 
 #main__banner__carousel__prev:hover, #main__banner__carousel__next:hover {
-  background-color: #4d207a;
+  background-color: var(--light-primary-color);
 }
 
 #main__banner__carousel__prev {
@@ -156,12 +159,44 @@ html {
 .main__movies__container {
   width: 100%;
   height: 100%;
-  background-color: #ccc;
+  margin: 3rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-.main__movies__category__title::before {
-  content: '';
-  width: 10px;
+.main__movies__category {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.main__movies__category__divider {
+  width: 5px;
   height: 100%;
-  background-color: red;
+  background-color: var(--primary-color);
+  border-radius: 7px;
+}
+
+.main__movies__category__title {
+  font-size: 1.4em;
+  color: var(--text-color);
+}
+
+.main__movies {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 300px;
+  gap: 2rem;
+  row-gap: 3rem;
+}
+
+.main__movies__movie__img {
+  width: 100%;
+  height: 100%;
+  border-radius: 7px;
 }
