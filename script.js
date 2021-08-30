@@ -2,9 +2,12 @@ const bannerSlides = document.querySelectorAll('.main__banner__carousel__img')
 const moviesContainer = document.querySelector('.main__movies');
 const nextSlideBtn = document.querySelector('#main__banner__carousel__next')
 const prevSlideBtn = document.querySelector('#main__banner__carousel__prev')
+const _apiURL = `https://imdb-api.com/en/API/MostPopularMovies/k_4y95r9qk`
 const lastSlideIndex = bannerSlides.length - 1
+const amountOfElementsInPage = 8;
 
 let currentSlideIndex = 0;
+let moviesPageIndex = 0;
 
 const changeSlideVisibility = currentSlideIndex => {
   bannerSlides.forEach(banner => 
@@ -34,29 +37,60 @@ const autoChangeSlide = () => {
   setInterval(nextSlide, 3000)
 }
 
-const getMovies = async () => {
-  const moviesInJson = await fetch("./movies.json");
-  const { movies } = await moviesInJson.json();
+const getMoviesArray = async () => {
+  const moviesInJson = await fetch(_apiURL);
+  const { items: movies, errorMessage: haveError } = await moviesInJson.json();
 
-  console.log(movies);
+  if (haveError) {
+    throw new Error("Max of requests per day.")
+  }
 
-  renderMoviesIntoDOM(movies);
+  return movies;
+}
+
+const splitMoviesArrayToPages = moviesArray => {
+  const myArray = [];
+
+  for (let i = 0; i < moviesArray.length; i++) {
+    const arrItem = moviesArray.splice(0, amountOfElementsInPage)
+
+    myArray.push(arrItem);
+  }
+
+  return myArray;
+}
+
+const setMoviesOfCurrentPage = allMoviesArray => {
+  const moviesFromCurrentPage = allMoviesArray[moviesPageIndex];
+  
+  renderMoviesIntoDOM(moviesFromCurrentPage)
 }
 
 const renderMoviesIntoDOM = moviesArray => {
-  const movies = moviesArray.map(({name, img, year}) => {
-    return `
-      <div class="main__movies__movie">
-        <img class="main__movies__movie__img" src="${img}" alt="${name} movie">
-      </div>
-    `
-  }).join('');
+   const movies = moviesArray.map(({title, image, year}) => {
+     return `
+         <div class="main__movies__movie">
+           <a href="/${title}">
+             <div class="main__movies__movie__content" 
+             style="background-image: url('${image}')">
+             </div>
+           </a>
+         </div>
+     `
+   }).join('');
 
   moviesContainer.innerHTML += movies;
 }
 
+const loadMovies = async () => {
+  const moviesArray = await getMoviesArray()
+  const organizedMoviesArray = splitMoviesArrayToPages(moviesArray)
+
+  setMoviesOfCurrentPage(organizedMoviesArray)
+}
+
 autoChangeSlide()
-getMovies()
+loadMovies()
 
 nextSlideBtn.addEventListener('click', nextSlide)
 prevSlideBtn.addEventListener('click', prevSlide)

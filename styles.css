@@ -195,8 +195,16 @@ html {
   row-gap: 3rem;
 }
 
-.main__movies__movie__img {
+.main__movies__movie__link {
   width: 100%;
   height: 100%;
-  border-radius: 7px;
+}
+
+
+.main__movies__movie__content {
+  width: 100%;
+  height: 100%;
+  background-color: #ccc;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
