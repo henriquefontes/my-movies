@@ -7,7 +7,7 @@ const lastSlideIndex = bannerSlides.length - 1
 const amountOfElementsInPage = 8;
 
 let currentSlideIndex = 0;
-let moviesPageIndex = 0;
+let moviesPageIndex = 1;
 
 const changeSlideVisibility = currentSlideIndex => {
   bannerSlides.forEach(banner => 
@@ -37,17 +37,6 @@ const autoChangeSlide = () => {
   setInterval(nextSlide, 3000)
 }
 
-const getMoviesArray = async () => {
-  const moviesInJson = await fetch(_apiURL);
-  const { items: movies, errorMessage: haveError } = await moviesInJson.json();
-
-  if (haveError) {
-    throw new Error("Max of requests per day.")
-  }
-
-  return movies;
-}
-
 const splitMoviesArrayToPages = moviesArray => {
   const myArray = [];
 
@@ -57,8 +46,22 @@ const splitMoviesArrayToPages = moviesArray => {
     myArray.push(arrItem);
   }
 
-  return myArray;
+  return myArray
 }
+
+const getMoviesArray = async () => {
+  const moviesInJson = await fetch(_apiURL);
+  const { items: movies, errorMessage } = await moviesInJson.json();
+
+  if (errorMessage) {
+    throw new Error(errorMessage)
+  }
+
+  const splittedMoviesArray = splitMoviesArrayToPages(movies)
+
+  return splittedMoviesArray
+}
+
 
 const setMoviesOfCurrentPage = allMoviesArray => {
   const moviesFromCurrentPage = allMoviesArray[moviesPageIndex];
@@ -82,15 +85,22 @@ const renderMoviesIntoDOM = moviesArray => {
   moviesContainer.innerHTML += movies;
 }
 
-const loadMovies = async () => {
-  const moviesArray = await getMoviesArray()
-  const organizedMoviesArray = splitMoviesArrayToPages(moviesArray)
+const loadMoviesOnPageLoad = async () => {
+  const movies = await getMoviesArray()
 
-  setMoviesOfCurrentPage(organizedMoviesArray)
+  setMoviesOfCurrentPage(movies)
+}
+
+const loadNextMovies = async () => {
+  const movies = await getMoviesArray()
+
+  moviesPageIndex++
+
+  setMoviesOfCurrentPage(movies)
 }
 
 autoChangeSlide()
-loadMovies()
+loadMoviesOnPageLoad()
 
 nextSlideBtn.addEventListener('click', nextSlide)
 prevSlideBtn.addEventListener('click', prevSlide)

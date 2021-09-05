@@ -163,6 +163,7 @@ html {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  position: relative;
 }
 
 .main__movies__category {
@@ -206,5 +207,46 @@ html {
   height: 100%;
   background-color: #ccc;
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: cover;
+}
+
+.main__movies__loading {
+  width: 100%;
+  height: 50px;
+  bottom: 0;
+  position: absolute;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: .5rem;
+}
+
+.loading__ball--1, .loading__ball--2, .loading__ball--3 {
+  width: 8px;
+  height: 8px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  animation-name: loadingBalls;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+.loading__ball--2 {
+  animation-delay: .1s;
+}
+
+.loading__ball--3 {
+  animation-delay: .2s;
+}
+
+@keyframes loadingBalls {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
